@@ -28,11 +28,13 @@ const AppNavigator = createStackNavigator(
     InventoryScreen: Inventory,
     EditUserScreen: EditUser,
     OverdueScreen: Overdue,
+    Exit: SignOutScreen,
   }, {
     initialRouteName: 'HomeScreen'
   }
 );
-
+/**
+ 
 export const AppStack = createDrawerNavigator(
     {
         Home: {
@@ -51,13 +53,15 @@ export const AppStack = createDrawerNavigator(
         drawerToggleRoute: 'DrawerToggle'
     }
 );
+ */
+
 export const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
 
 export const createRootNavigator = (signedIn = false) => {
   return createSwitchNavigator(
     {
-      App: AppStack,
+      App: AppNavigator,
       Auth: AuthStack,
     },
     {

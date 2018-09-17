@@ -7,6 +7,15 @@ import { bold } from "ansi-colors";
 export default class SignOutScreen extends React.Component {
     static navigationOptions = {
         title: 'Profile',
+        headerStyle: {
+          backgroundColor: '#006883',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+
+    
     };
     constructor(props){
       super(props);
@@ -46,21 +55,7 @@ export default class SignOutScreen extends React.Component {
     return (
       
         <View style={{ paddingVertical: 20 }}>
-        <Header
-          leftComponent={{
-            icon: 'menu',
-            color: '#fff',
-            onPress: () => this.props.navigation.openDrawer(),
-            size: 30,
-          }}
-          centerComponent={{
-            text: "Profile",
-            style: { color: "white", fontSize:25, fontWeight: 'bold' },
-            
-          }}
-          outerContainerStyles={{ backgroundColor: "#333F50" }}
-      
-        />  
+         
         <Card title={this.state.fullname}>
           <View
             style={{
@@ -104,3 +99,23 @@ export default class SignOutScreen extends React.Component {
     );
     }
 }
+
+/**
+ * 
+ 
+ <Header
+          leftComponent={{
+            icon: 'menu',
+            color: '#fff',
+            onPress: () => this.props.navigation.openDrawer(),
+            size: 30,
+          }}
+          centerComponent={{
+            text: "Profile",
+            style: { color: "white", fontSize:25, fontWeight: 'bold' },
+            
+          }}
+          outerContainerStyles={{ backgroundColor: "#333F50" }}
+      
+        /> 
+ */

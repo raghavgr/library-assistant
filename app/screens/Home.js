@@ -1,13 +1,39 @@
 import React from 'react';
 import { StyleSheet, View,TouchableHighlight, Image, AsyncStorage } from 'react-native';
-import { Text, Button, Header } from 'react-native-elements';
+import { Text, Button, Icon} from 'react-native-elements';
+import Row from '../components/Row';
 
 /**
  *
 
  */
 export default class Home extends React.Component {
-
+    static navigationOptions = ({ navigation }) => {
+       return {
+        title: 'Home',
+        headerStyle: {
+            backgroundColor: '#006883',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerRight: (
+              <Button 
+                
+                onPress={() => navigation.navigate('Exit')}
+                icon={{
+                    name: 'exit-to-app',
+                    size: 15,
+                    color: 'white'
+                  }}
+                title="Exit"
+                
+                backgroundColor="#006884"
+              />
+          ),
+       };
+    };
     constructor(props){
         super(props);
     
@@ -30,31 +56,12 @@ export default class Home extends React.Component {
             <View style={{
                 flex: 1,
                 flexDirection: 'column',}}>
-                <Header
-                outerContainerStyles={styles.headerOuterContainer}
-                leftComponent={{
-                    icon: 'menu',
-                    color: '#fff',
-                    onPress: () => this.props.navigation.openDrawer(),
-                    size: 30,
-                }}
-                centerComponent={{
-                    text: 'HOME',
-                    style: { color: '#fff', fontSize: 18, fontWeight: 'bold' }
-                }}
-                rightComponent={{
-                    icon: 'log-out',
-                    type: 'entypo',
-                    color: '#fff' ,
-                    onPress: () => this.props.navigation.navigate('Exit'),
-                    size:25,
-                }}
-                />
+
                 <View style={{
                         flex: 1,
                         backgroundColor: '#333F50',
                         justifyContent: 'center'}}>
-                        <Text style={{textAlign: 'right',color: 'white',fontSize: 20,paddingRight: 20}}><Text style={{color: '#8abbd8', fontWeight: 'bold'}}>Library:</Text> {this.state.library.charAt(0).toUpperCase() + this.state.library.slice(1)} </Text>
+                        <Text style={{textAlign: 'right',color: 'white',fontSize: 14,paddingRight: 20}}><Text style={{color: '#8abbd8', fontWeight: 'bold'}}>Library:</Text> {this.state.library.charAt(0).toUpperCase() + this.state.library.slice(1)} </Text>
 
                 </View>
                 <View style={{
@@ -148,7 +155,7 @@ export default class Home extends React.Component {
 const styles = StyleSheet.create({
     headerOuterContainer: {
         backgroundColor: '#006883',
-        borderBottomWidth:0
+        borderBottomWidth:0,
       },
   container: {
     flex: 1,
@@ -164,3 +171,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#e1e1e2'
   },
 });
+
+/**
+ 
+                <Header
+                outerContainerStyles={styles.headerOuterContainer}
+                centerComponent={{
+                    text: 'HOME',
+                    style: { color: '#fff', fontSize: 18, fontWeight: 'bold' }
+                }}
+                rightComponent={{
+                    icon: 'log-out',
+                    type: 'entypo',
+                    color: '#fff' ,
+                    onPress: () => this.props.navigation.navigate('Exit'),
+                    size:25,
+                }}
+                />
+ */
