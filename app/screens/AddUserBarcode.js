@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, AsyncStorage } from 'react-native';
 import { BarCodeScanner } from 'expo';
 import _ from 'lodash';
 
@@ -7,11 +7,23 @@ export default class AddUserBarcode extends Component {
 
   constructor(props){
     super(props);
-    this.state ={ isLoading: true}
+    this.state = { 
+      isLoading: true,
+      libName: ''
+    }
 
     this._handleBarCodeRead = _.debounce(this._handleBarCodeRead, 600);
   }
 
+  async componentDidMount() {
+    var value;
+    await AsyncStorage.multiGet(['cognitoSession', 'loggedIn']).then(
+      response => {
+        value = JSON.parse(response[0][1]);
+      }
+    );
+    this.setState({libName: value['custom:Library']});  
+  }
 
   render() {
     return (
@@ -46,7 +58,7 @@ export default class AddUserBarcode extends Component {
         'firstName': this.props.navigation.state.params.firstName,
         'middleName': this.props.navigation.state.params.middleName,
         'lastName': this.props.navigation.state.params.lastName,
-        'libraryName': 'SCU',
+        'libraryName': this.state.libName,
       })
     })
       .then((response) => {

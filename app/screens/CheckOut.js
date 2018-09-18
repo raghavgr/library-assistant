@@ -6,7 +6,8 @@ import {
     Text,
     StyleSheet,
     Alert,
-    ImageBackground} from 'react-native';
+    ImageBackground,
+    AsyncStorage } from 'react-native';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Entypo';
 import {Constants, BarCodeScanner, Permissions} from 'expo';
@@ -60,10 +61,17 @@ export default class BarCodeReader extends Component {
         hasResult: false,
         BookData: null,
         ReaderData: null,
-        LibName:null,
+        libName:null,
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+        var value;
+        await AsyncStorage.multiGet(['cognitoSession', 'loggedIn']).then(
+        response => {
+            value = JSON.parse(response[0][1]);
+        }
+        );
+        this.setState({libName: value['custom:Library']}); 
         this._requestCameraPermission();
     }
 
@@ -96,39 +104,38 @@ export default class BarCodeReader extends Component {
         this.setState({allowScanBook: true})
     };
     _onPressConfirm = () => {  //() request.PUT
+        // fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/reader/'+'18245')
 
         console.log('readerBarcode' + ':'+this.state.ReaderData.data);
         console.log('bookBarcode' + ':'+this.state.BookData.data);
+        console.log(this.state.libName);
         fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/reader/'+this.state.ReaderData.data)
-        // fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/reader/'+'18245')
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson.LibraryName);
-                this.state.LibName = responseJson.LibraryName;
+            .then((response) => {
+                console.log(response.LibraryName);
+                //this.state.libName = response.LibraryName;
                 fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/checkout', {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                'libraryName': 'SCU', //this.state.LibName,
-                'bookBarcode': this.state.BookData.data,
-                'readerBarcode': this.state.ReaderData.data,
-                // 'bookBarcode':'12345',
-                // 'readerBarcode':'18245',
-            }),
-        }).then((response) => {
-            if(response.status === 400){
-                console.log(response);
-                alert('Wrong information. Please scan again.');
-            }
-            else{
-                console.log(response.status);
-                alert('Checkout successfully');
-            }
-        }
-        );
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        'libraryName': this.state.libName, //this.state.LibName,
+                        'bookBarcode': this.state.BookData.data,
+                        'readerBarcode': this.state.ReaderData.data,
+                        // 'bookBarcode':'12345',
+                        // 'readerBarcode':'18245',
+                    }),
+                }).then((response) => {
+                    if(response.status === 400){
+                        console.log(response);
+                        alert('Wrong information. Please scan again.');
+                    }
+                    else{
+                        console.log(response.status);
+                        alert('Checkout successfully');
+                    }
+                });
             })
     };
     render() {

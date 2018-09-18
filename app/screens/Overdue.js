@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator, View, AsyncStorage } from 'react-native';
 import Header from '../components/Header'
 import Row from '../components/Row'
 
@@ -10,7 +10,7 @@ export default class App extends Component {
     this.state ={ isLoading: true}
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     // return fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/book')
     //   .then((response) => {
     //       console.log(response)
@@ -29,10 +29,17 @@ export default class App extends Component {
     //   .catch((error) =>{
     //     console.error(error);
     //   });
-
+    var value;
+    await AsyncStorage.multiGet(['cognitoSession', 'loggedIn']).then(
+      response => {
+        value = JSON.parse(response[0][1]);
+      }
+    );
+    this.setState({libName: value['custom:Library']}); 
+    var url = 'https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/book/overdue/?libraryName=' + this.state.libName
 
     // need to create variable for the libraryName and then append to URL
-    return fetch('https://p0kvnd5htd.execute-api.us-east-2.amazonaws.com/test/book/overdue/?libraryName=SCU', {
+    return fetch(url, {
         method: 'GET',
         headers: {
             Accept: 'application/json',

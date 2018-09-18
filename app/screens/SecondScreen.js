@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BarCodeScanner } from 'expo';
 import   _ from 'lodash';
+import { AsyncStorage } from '@aws-amplify/core';
 
 
 class SecondScreen extends Component {
@@ -12,10 +13,21 @@ class SecondScreen extends Component {
 
     this.state= {
         //results: null
+        libName: '',
         results: []
     }
     this.fetchData = this.fetchData.bind(this);
     this._handleBarCodeRead = _.debounce(this._handleBarCodeRead, 600);
+  }
+
+  async componentDidMount() {
+    var value;
+    await AsyncStorage.multiGet(['cognitoSession', 'loggedIn']).then(
+      response => {
+        value = JSON.parse(response[0][1]);
+      }
+    );
+    this.setState({libName: value['custom:Library']});  
   }
 
   // fetchData(URL) {
@@ -81,7 +93,7 @@ class SecondScreen extends Component {
         // 'firstName': 'MICHAEL',
         // 'middleName': 'C',
         // 'lastName': 'CHANG',
-        'libraryName': 'SCU', //libName
+        'libraryName': this.state.libName, //libName
         'bookBarcode': isbn //186461
       }),
     })
@@ -97,6 +109,7 @@ class SecondScreen extends Component {
         else {
           console.log(response.status)
           console.log(response)
+          alert(this.state.libName);
           this.props.navigation.navigate('ThirdPage', { title: this.state.results.items[0].volumeInfo.title });
         }
       })

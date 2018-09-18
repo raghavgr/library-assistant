@@ -18,7 +18,7 @@ export default class App extends React.Component {
       <Card>
         <FormLabel>First Name</FormLabel>
         <FormInput placeholder="First Name..." onChangeText={(text) => this.setState({fname: text})}/>
-        <FormLabel>Middle Name</FormLabel>
+        <FormLabel>Middle Name (optional)</FormLabel>
         <FormInput placeholder="Middle Name..." onChangeText={(text) => this.setState({mname: text})}/>
         <FormLabel>Last Name</FormLabel>
         <FormInput placeholder="Last Name..." onChangeText={(text) => this.setState({lname: text})}/>
